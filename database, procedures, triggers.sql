@@ -36,7 +36,7 @@ create table logs (
 go
 create table pagina (
 	id				bigint			not null,
-	codigoHTML		varchar(max)	not null,
+	codigoHTML		nvarchar(max)	not null,
 	tipoConteudo	varchar(30)		not null,
 	paginaUrl		varchar(500)	not null,
 	tamanhoArquivo	varbinary(max)	not null
@@ -252,3 +252,45 @@ begin
 	end
 end
 
+go
+create procedure sp_pagina	(@opc char(1), @paginaId bigint, @codigoHTML nvarchar(max), @tipoConteudo varchar(30),
+							@paginaUrl varchar(500), @tamanhoArquivo varbinary(max), @saida varchar(100) output)
+as
+begin
+	if (@paginaId is not null) begin
+		if (upper(@opc) = 'I' or upper(@opc) = 'U') begin
+			if (@codigoHTML is null or @tipoConteudo is null or @paginaUrl is null or @tamanhoArquivo is null) begin
+				raiserror('Erro ao Inserir/Atualizar Pagina: uma ou mais informacoes em branco', 16, 1)
+			end
+			else begin
+				if (upper(@opc) = 'I') begin
+					if ((select id from pagina where id = @paginaId) is null) begin
+						insert into pagina values (@paginaId, @codigoHTML, @tipoConteudo, @paginaUrl, @tamanhoArquivo)
+						set @saida = 'Pagina #'+cast(@paginaId as varchar(10))+' inserida com sucesso.'
+					end
+					else begin
+						raiserror('Erro ao Inserir Pagina: ID ja existe', 16, 1)
+					end					
+				end
+				else if (upper(@opc) = 'U') begin
+					if ((select id from pagina where id = @paginaId) is not null) begin
+						update pagina
+						set codigoHTML = @codigoHTML, tipoConteudo = @tipoConteudo, paginaUrl = @paginaUrl, tamanhoArquivo = @tamanhoArquivo where id = @paginaId
+						set @saida = 'Pagina #'+cast(@paginaId as varchar(10))+' atualizada com sucesso.'
+					end
+					else begin
+						raiserror('Erro ao Atualizar Pagina: ID inexistente', 16, 1)
+					end
+				end
+			end	
+		end
+		else if (upper(@opc) = 'D') begin
+			delete from pagina where id = @paginaId
+			set @saida = 'Pagina #'+cast(@paginaId as varchar(10))+' excluida com sucesso.'
+		end
+	end
+	else begin
+		raiserror('Erro em Pagina: ID nulo', 16, 1)
+	end
+end
+ 
