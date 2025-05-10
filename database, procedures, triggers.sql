@@ -196,3 +196,59 @@ begin
 	end
 end
 
+go
+create procedure sp_log (@opc char(1), @logId bigint, @mensagem varchar(200), @sessaoId bigint, @saida varchar(100) output)
+as
+begin
+	if (@logId is not null) begin
+			if (upper(@opc) = 'I') begin
+				if ((select id from logs where id = @logId) is null) begin
+					if (@mensagem is not null and @sessaoId is not null) begin
+						if ((select id from sessao where id = @sessaoId) is not null) begin
+							insert into logs values (@logId, @mensagem, @sessaoId)
+							set @saida = 'Log da Sessao #'+cast(@sessaoId as varchar(10))+' inserido com sucesso.'
+						end
+						else begin
+							raiserror('Erro ao inserir Log: Sessao inexistente', 16, 1)
+						end
+					end
+					else begin
+						raiserror('Erro ao inserir Log: Mensagem ou Sessao nulos', 16, 1)
+					end
+				end
+				else begin
+					raiserror('Erro ao Inserir Log: ID ja existe', 16, 1)
+				end
+			end
+			else begin 
+				if ((select id from logs where id = @logId) is not null) begin
+					if (upper(@opc) = 'U') begin
+						if (@mensagem is not null and @sessaoId is not null) begin
+							if ((select id from sessao where id = @sessaoId) is not null) begin
+								update logs
+								set mensagem = @mensagem, sessaoId = @sessaoId where id = @logId
+								set @saida = 'Log #'+cast(@logId as varchar(10))+' - Sessao #'+cast(@sessaoId as varchar(10))+' atualizado com sucesso.'
+							end
+							else begin
+								raiserror('Erro ao atualizar Log: Sessao inexistente', 16, 1)
+							end
+						end 
+						else begin
+							raiserror('Erro ao atualizar Log: Mensagem ou Sessao nulos', 16, 1)
+						end
+					end 
+					else if (upper(@opc) = 'D') begin
+						delete from logs where id = @logId
+						set @saida = 'Log #'+cast(@logId as varchar(10))+' excluido com sucesso.'
+					end
+				end
+				else begin
+					raiserror('Erro ao atualizar Log: ID inexistente', 16, 1)
+				end
+			end
+	end
+	else begin
+		raiserror('Erro em Log: ID nulo', 16, 1)
+	end
+end
+
