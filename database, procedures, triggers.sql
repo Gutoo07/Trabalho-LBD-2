@@ -14,7 +14,8 @@ use TrabalhoLabBd2
 go
 ------------------------------
 create table sessao (
-	id	bigint	not null
+	id			bigint	not null,
+	usuarioId	bigint	not null
 	primary key(id)
 )
 go
@@ -77,17 +78,38 @@ begin
 	begin
 		if (upper(@opc) = 'I')
 		begin
-			/*antes, o IP a ser inserido precisa ser validado. nao sei o que eh um IP valido entao nao criarei a procedure de valicadao ainda*/
-			insert into usuario values (@usuarioId, @usuarioIp, @usuarioNome)
-			set @saida = 'Novo usuario '+@usuarioNome+' (ID: #'+cast(@usuarioId as varchar(10))+' IP: '+@usuarioIp+') criado com sucesso.'
+			if (@usuarioIp is not null and @usuarioNome is not null)
+			begin
+				if ((select id from usuario where id = @usuarioId) is null)
+				begin
+					/*antes, o IP a ser inserido precisa ser validado. nao sei o que eh um IP valido entao nao criarei a procedure de valicadao ainda*/
+					insert into usuario values (@usuarioId, @usuarioIp, @usuarioNome)
+					set @saida = 'Novo usuario '+@usuarioNome+' (ID: #'+cast(@usuarioId as varchar(10))+' IP: '+@usuarioIp+') criado com sucesso.'
+				end
+				else
+				begin
+					raiserror('Erro ao adicionar usuario: este ID ja existe.', 16, 1)
+				end
+			end
+			else
+			begin
+				raiserror('Erro ao adicionar usuario: um ou mais campos estao em branco.', 16, 1)
+			end			
 		end
 		else if (upper(@opc) = 'U')
 		begin
 			if ((select id from usuario where id = @usuarioId) is not null)
 			begin
-				update usuario
-				set nome = @usuarioNome, usuarioIp = @usuarioIp where id = @usuarioId
-				set @saida = 'Usuario '+@usuarioNome+' (ID: #'+cast(@usuarioId as varchar(10))+' IP: '+@usuarioIp+') atualizado com sucesso.'
+				if (@usuarioIp is not null and @usuarioNome is not null)
+				begin
+					update usuario
+					set nome = @usuarioNome, usuarioIp = @usuarioIp where id = @usuarioId
+					set @saida = 'Usuario '+@usuarioNome+' (ID: #'+cast(@usuarioId as varchar(10))+' IP: '+@usuarioIp+') atualizado com sucesso.'
+				end
+				else
+				begin
+					raiserror('Erro ao atualizar usuario: um ou mais campos estao em branco.', 16, 1)
+				end
 			end
 			else
 			begin
@@ -111,12 +133,66 @@ begin
 	else
 	begin
 		raiserror('Erro em Usuario: ID nulo', 16, 1)
-	end
-	
+	end	
 end
 go
-create procedure sp_sessao (@opc char(1), @usuarioId bigint, @saida varchar(100) output)
+
+create procedure sp_sessao (@opc char(1), @sessaoId bigint, @usuarioId bigint, @saida varchar(100) output)
 as
 begin
-	
+	if (@sessaoId is not null)
+	begin
+		declare @usuarioNome varchar(30)
+		if (upper(@opc) = 'I')
+		begin
+			if ((select id from usuario where id = @usuarioId) is not null)
+			begin
+				if ((select id from sessao where id = @sessaoId) is null)
+				begin
+					insert into sessao values (@sessaoId, @usuarioId)
+					set @usuarioNome = (select nome from usuario where id = @usuarioId)
+					set @saida = 'Sessao #'+cast(@sessaoId as varchar(10))+' de Usuario '+@usuarioNome+' iniciada com sucesso.'
+				end
+				else
+				begin
+					raiserror('Erro ao iniciar Sessao: ID ja existe', 16, 1)
+				end
+				
+			end
+			else
+			begin
+				raiserror('Erro ao iniciar sessao: ID de usuario nao existe', 16, 1)
+			end
+		end
+		else if (upper(@opc) = 'U')
+		begin
+			if ((select id from usuario where id = @usuarioId) is not null and (select id from sessao where id = @sessaoId) is not null)
+			begin
+				update sessao
+				set usuarioId = @usuarioId where id = @sessaoId
+				set @usuarioNome = (select nome from usuario where id = @usuarioId)
+				set @saida = 'Sessao #'+cast(@sessaoId as varchar(10))+' atualizada para Usuario '+@usuarioNome+' com sucesso.'
+			end
+			else
+			begin
+				raiserror('Erro ao atualizar Sessao: Sessao ou Usuario inexistentes', 16, 1)
+			end
+		end
+		else if (upper(@opc) = 'D')
+		begin
+			if ((select id from sessao where id = @sessaoId) is not null)
+			begin
+				delete from sessao where id = @sessaoId
+			end
+			else
+			begin
+				raiserror('Erro ao excluir sessao: ID inexistente', 16, 1)
+			end
+		end
+	end
+	else
+	begin
+		raiserror('Erro em Sessao: ID nulo', 16, 1)
+	end
 end
+
