@@ -15,13 +15,13 @@ go
 ------------------------------
 create table sessao (
 	id			bigint	not null,
-	usuarioId	bigint	not null
+	usuario_id	bigint	not null
 	primary key(id)
 )
 go
 create table usuario (
 	id			bigint		not null,
-	usuarioIp	varchar(20)	not null,
+	usuario_ip	varchar(20)	not null,
 	nome		varchar(30)	not null,
 	primary key(id)
 )
@@ -29,45 +29,45 @@ go
 create table logs (
 	id			bigint			not null,
 	mensagem	varchar(200)	not null,
-	sessaoId	bigint			not null
+	sessao_id	bigint			not null
 	primary key(id)
-	foreign key(sessaoId) references sessao(id)
+	foreign key(sessao_id) references sessao(id)
 )
 go
 create table pagina (
-	id					bigint			not null,
-	codigoHTML			nvarchar(max)	not null,
-	tipoConteudo		varchar(30)		not null,
-	paginaUrl			varchar(500)	not null,
-	tamanhoArquivoBytes	int				not null
+	id						bigint			not null,
+	codigo_html				nvarchar(max)	not null,
+	tipo_conteudo			varchar(30)		not null,
+	pagina_url				varchar(500)	not null,
+	tamanho_arquivo_bytes	int				not null
 	primary key(id)
 )
 go
 create table requisicao (
 	id			bigint			not null,
-	codigoHTTP	varchar(200)	not null,
+	codigo_http	varchar(200)	not null,
 	segundos	int				not null,
-	sessaoId	bigint			not null,
-	paginaId	bigint			not null
+	sessao_id	bigint			not null,
+	pagina_id	bigint			not null
 	primary key(id)
-	foreign key(sessaoId) references sessao(id),
-	foreign key(paginaId) references pagina(id)
+	foreign key(sessao_id) references sessao(id),
+	foreign key(pagina_id) references pagina(id)
 )
 go
 create table link (
 	id			bigint			not null,
-	urlDestino	varchar(500)	not null,
+	url_destino	varchar(500)	not null,
 	titulo		varchar(100)	null,
-	linkTarget		varchar(7)	not null
+	link_target		varchar(7)	not null
 	primary key(id)
 )
 go
 create table pagina_link (
-	paginaId	bigint	not null,
-	linkId		bigint	not null
-	primary key(paginaId, linkId)
-	foreign key(paginaId) references pagina(id),
-	foreign key(linkId) references link(id)
+	pagina_id	bigint	not null,
+	link_id		bigint	not null
+	primary key(pagina_id, link_id)
+	foreign key(pagina_id) references pagina(id),
+	foreign key(link_id) references link(id)
 )
 ------------------------------------------------------------------
 go
@@ -103,7 +103,7 @@ begin
 				if (@usuarioIp is not null and @usuarioNome is not null)
 				begin
 					update usuario
-					set nome = @usuarioNome, usuarioIp = @usuarioIp where id = @usuarioId
+					set nome = @usuarioNome, usuario_ip = @usuarioIp where id = @usuarioId
 					set @saida = 'Usuario '+@usuarioNome+' (ID: #'+cast(@usuarioId as varchar(10))+' IP: '+@usuarioIp+') atualizado com sucesso.'
 				end
 				else
@@ -169,7 +169,7 @@ begin
 			if ((select id from usuario where id = @usuarioId) is not null and (select id from sessao where id = @sessaoId) is not null)
 			begin
 				update sessao
-				set usuarioId = @usuarioId where id = @sessaoId
+				set usuario_id = @usuarioId where id = @sessaoId
 				set @usuarioNome = (select nome from usuario where id = @usuarioId)
 				set @saida = 'Sessao #'+cast(@sessaoId as varchar(10))+' atualizada para Usuario '+@usuarioNome+' com sucesso.'
 			end
@@ -226,7 +226,7 @@ begin
 						if (@mensagem is not null and @sessaoId is not null) begin
 							if ((select id from sessao where id = @sessaoId) is not null) begin
 								update logs
-								set mensagem = @mensagem, sessaoId = @sessaoId where id = @logId
+								set mensagem = @mensagem, sessao_id = @sessaoId where id = @logId
 								set @saida = 'Log #'+cast(@logId as varchar(10))+' - Sessao #'+cast(@sessaoId as varchar(10))+' atualizado com sucesso.'
 							end
 							else begin
@@ -275,7 +275,7 @@ begin
 				else if (upper(@opc) = 'U') begin
 					if ((select id from pagina where id = @paginaId) is not null) begin
 						update pagina
-						set codigoHTML = @codigoHTML, tipoConteudo = @tipoConteudo, paginaUrl = @paginaUrl, tamanhoArquivoBytes = @tamanhoArquivo where id = @paginaId
+						set codigo_html = @codigoHTML, tipo_conteudo = @tipoConteudo, pagina_url = @paginaUrl, tamanho_arquivo_bytes = @tamanhoArquivo where id = @paginaId
 						set @saida = 'Pagina #'+cast(@paginaId as varchar(10))+' atualizada com sucesso.'
 					end
 					else begin
@@ -319,7 +319,7 @@ begin
 					end
 					else begin
 						update requisicao
-						set codigoHTTP = @coditoHTTP, segundos = @segundos, sessaoId = @sessaoId, paginaId = @paginaId where id = @id
+						set codigo_http = @coditoHTTP, segundos = @segundos, sessao_id = @sessaoId, pagina_id = @paginaId where id = @id
 						set @saida = 'Requisicao #'+cast(@id as varchar(10))+' atualizada com sucesso.'
 					end
 				end
@@ -368,7 +368,7 @@ begin
 					end
 					else begin
 						update link
-						set urlDestino = @urlDestino, titulo = @titulo, linkTarget = @target
+						set url_destino = @urlDestino, titulo = @titulo, link_target = @target
 						set @saida = 'Link '+cast(@linkId as varchar(10))+' - '+@titulo+' atualizado com sucesso.'
 					end
 				end
@@ -395,7 +395,7 @@ begin
 	end
 	else begin
 		if (upper(@opc) = 'I') begin
-			if ((select paginaId from pagina_link where paginaId = @paginaId and linkId = @linkId) is not null) begin
+			if ((select pagina_id from pagina_link where pagina_id = @paginaId and link_id = @linkId) is not null) begin
 				raiserror('Erro ao Inserir Pagina_Link: IDs ja existentes.', 16, 1)
 			end
 			else begin
@@ -404,11 +404,11 @@ begin
 			end
 		end
 		else if (upper(@opc) = 'D') begin
-			if ((select paginaId from pagina_link where paginaId = @paginaId and linkId = @linkId) is null) begin
+			if ((select pagina_id from pagina_link where pagina_id = @paginaId and link_id = @linkId) is null) begin
 				raiserror('Erro ao Excluir Pagina_Link: IDs nao existentes.', 16, 1)
 			end
 			else begin
-				delete from pagina_link where paginaId = @paginaId and linkId = @linkId
+				delete from pagina_link where pagina_id = @paginaId and link_id = @linkId
 				set @saida = 'Relacao de Pagina #'+cast(@paginaId as varchar(10))+' e Link #'+cast(@linkId as varchar(10))+' excluida com sucesso.'
 			end
 		end
@@ -432,7 +432,7 @@ create trigger t_pagina on pagina
 after insert, update
 as 
 begin
-	if ((select tamanhoArquivoBytes from inserted) > 1000000) begin
+	if ((select tamanho_arquivo_bytes from inserted) > 1000000) begin
 		raiserror('Erro ao Inserir/Atualizar Pagina: arquivo > 1MB.', 16, 1)
 		rollback transaction
 	end
@@ -444,6 +444,6 @@ returns int
 as
 begin
 	declare @qtdPaginas int
-	set @qtdPaginas = (select count(linkId) from pagina_link where linkId = @linkId)
+	set @qtdPaginas = (select count(link_id) from pagina_link where link_id = @linkId)
 	return @qtdPaginas
 end
