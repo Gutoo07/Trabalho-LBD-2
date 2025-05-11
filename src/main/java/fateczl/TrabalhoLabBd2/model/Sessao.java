@@ -18,8 +18,8 @@ public class Sessao {
 	@Id
 	@Column(name = "id", nullable = false)
 	private Long id;
-	
-	@ManyToOne(targetEntity = Usuario.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "usuario_id", nullable = false)
-	private Usuario usuario;
+	@Column(name = "usuario", length = 30, nullable = false)
+	private String usuario;
+	@Column(name = "usuario_ip", length = 20, nullable = false)
+	private String usuario_ip;
 }

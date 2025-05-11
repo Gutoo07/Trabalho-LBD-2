@@ -14,15 +14,9 @@ use TrabalhoLabBd2
 go
 ------------------------------
 create table sessao (
-	id			bigint	not null,
-	usuario_id	bigint	not null
-	primary key(id)
-)
-go
-create table usuario (
 	id			bigint		not null,
-	usuario_ip	varchar(20)	not null,
-	nome		varchar(30)	not null,
+	usuario		varchar(30)	not null,
+	usuario_ip	varchar(20)	not null
 	primary key(id)
 )
 go
@@ -447,3 +441,5 @@ begin
 	set @qtdPaginas = (select count(link_id) from pagina_link where link_id = @linkId)
 	return @qtdPaginas
 end
+
+select * from sessao

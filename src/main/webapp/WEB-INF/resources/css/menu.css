@@ -1,0 +1,36 @@
+.navbar {
+    background-color: #007bff;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+}
+
+form {
+    margin-top: 50px;
+    width: 50%;
+    align-self: center;
+}
+
+.navbar a:hover {
+    background-color: #0056b3;
+    border-radius: 5px;
+}
+
+.menu {
+    display: flex;
+    gap: 10px;
+}
+
+.body_div {
+    width: 100%;
+}
+
+
+

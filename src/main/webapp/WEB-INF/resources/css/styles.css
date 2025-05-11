@@ -1,0 +1,127 @@
+
+/*RESET CSS*/
+
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	vertical-align: baseline;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+	margin-bottom: 25px;
+}
+
+label {
+    text-align: left;
+    margin-top: 10px;
+}
+
+input, button {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+hr { width:100%; height:1px; background: #000000 }
+
+.box_detalhes_consulta {
+    background-color: rgb(255, 255, 237);
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgba(65, 44, 38, 0.342);
+    border-radius: 2px;
+    user-select: none;
+    padding: 8px 50px 50px 50px;
+
+}
+
+.info_consulta {
+    margin-top: 24px;
+}
+
+.info_consulta * {
+    margin-bottom: 5px;
+}
+
+.especialidade_options {
+    text-align: left;
+    user-select: none;
+    margin-top: 10px;
+    height: 39px;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.box_title_consulta{
+    margin-top: 25px;
+}
+
+.body_div {
+    display: flex;
+    flex-direction: column;
+    align-self: baseline;
+    justify-content: space-between;
+}
+
+
+
+
