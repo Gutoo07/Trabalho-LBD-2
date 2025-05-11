@@ -293,4 +293,96 @@ begin
 		raiserror('Erro em Pagina: ID nulo', 16, 1)
 	end
 end
- 
+
+go
+create procedure sp_requisicao (@opc char(1), @id bigint, @coditoHTTP varchar(200), @segundos int, @sessaoId bigint, @paginaId bigint, @saida varchar(100) output)
+as
+begin
+	if (@id is not null) begin
+		if (upper(@opc) = 'I' or upper(@opc) = 'U') begin
+			if (@coditoHTTP is null or @segundos is null or @sessaoId is null or @paginaId is null) begin
+				raiserror('Erro ao Inserir/Atualizar Requisicao: uma ou mais informacoes estao em branco', 16, 1)
+			end
+			else begin
+				if (upper(@opc) = 'I') begin
+					if ((select id from requisicao where id = @id) is null) begin
+						insert into requisicao values (@id, @coditoHTTP, @segundos, @sessaoId, @paginaId)
+						set @saida = 'Requisicao #'+cast(@id as varchar(10))+' inserida com sucesso.'
+					end
+					else begin
+						raiserror('Erro ao Inserir Requisicao: ID ja existe', 16, 1)
+					end
+				end
+				else if (upper(@opc) = 'U') begin
+					if ((select id from requisicao where id = @id) is null) begin
+						raiserror('Erro ao Atualizar Requisicao: ID nao existe', 16, 1)
+					end
+					else begin
+						update requisicao
+						set codigoHTTP = @coditoHTTP, segundos = @segundos, sessaoId = @sessaoId, paginaId = @paginaId where id = @id
+						set @saida = 'Requisicao #'+cast(@id as varchar(10))+' atualizada com sucesso.'
+					end
+				end
+			end
+		end
+		else if (upper(@opc) = 'D') begin
+			if ((select id from requisicao where id = @id) is null) begin
+				raiserror('Erro ao Excluir Requisicao: ID nao existe.', 16, 1)
+			end
+			else begin
+				delete from requisicao where id = @id
+				set @saida = 'Requisicao #'+cast(@id as varchar(10))+' excluida com sucesso.'
+			end
+		end
+	end
+	else begin
+		raiserror('Erro em Requisicao: ID nulo', 16, 1)
+	end
+end
+
+go
+create procedure sp_link (@opc char(1), @linkId bigint, @urlDestino varchar(500), @titulo varchar(100), @target varchar(7), @saida varchar(100) output)
+as
+begin
+	if (@linkId is null) begin
+		raiserror('Erro em Link: ID nulo', 16, 1)
+	end
+	else begin
+		if (upper(@opc) = 'I' or upper(@opc) = 'U') begin
+			if (@urlDestino is null or @titulo is null or @target is null) begin
+				raiserror('Erro ao Inserir/Atualizar Link: uma ou mais informacoes estao em branco.', 16, 1)
+			end
+			else begin
+				if (upper(@opc) = 'I') begin
+					if ((select id from link where id = @linkId) is not null) begin
+						raiserror('Erro ao Inserir Link: ID ja existe.', 16, 1)
+					end
+					else begin
+						insert into link values (@linkId, @urlDestino, @titulo, @target)
+						set @saida = 'Link '+cast(@linkId as varchar(10))+' - '+@titulo+' inserido com sucesso.'
+					end
+				end
+				else if (upper(@opc) = 'U') begin
+					if ((select id from link where id = @linkId) is null) begin
+						raiserror('Erro ao Atualizar Link: ID inexistente.', 16, 1)
+					end
+					else begin
+						update link
+						set urlDestino = @urlDestino, titulo = @titulo, linkTarget = @target
+						set @saida = 'Link '+cast(@linkId as varchar(10))+' - '+@titulo+' atualizado com sucesso.'
+					end
+				end
+			end
+		end
+		else if (upper(@opc) = 'D')  begin
+			if ((select id from link where id = @linkId) is null) begin
+				raiserror('Erro ao Excluir Link: ID inexistente.', 16, 1)
+			end
+			else begin
+				delete from link where id = @linkId
+				set @saida = 'Link '+cast(@linkId as varchar(10))+' - '+@titulo+' excluido com sucesso.'
+			end
+		end
+	end
+end
+
