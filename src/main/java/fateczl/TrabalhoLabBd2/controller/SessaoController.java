@@ -21,7 +21,7 @@ public class SessaoController {
 	private SessaoRepository sessaoRep;
 	
 	@PostMapping("/novaSessao")
-	public void novaSessao (@RequestParam Map<String, String> params, ModelMap model, HttpServletResponse response,
+	public String novaSessao (@RequestParam Map<String, String> params, ModelMap model, HttpServletResponse response,
 			@CookieValue(value = "sessao", defaultValue = "") Long sessaoId) 
 			throws ClassNotFoundException, SQLException {
 		String sessaoIdStr = params.get("sessao_id");
@@ -34,7 +34,8 @@ public class SessaoController {
 			sessao.setUsuario(usuario);
 			sessao.setUsuario_ip(usuario_ip);
 			sessaoRep.save(sessao);
+			return "novaPagina";
 		}
-		
+		return "index";
 	}
 }
