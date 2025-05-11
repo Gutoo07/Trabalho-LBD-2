@@ -35,11 +35,11 @@ create table logs (
 )
 go
 create table pagina (
-	id				bigint			not null,
-	codigoHTML		nvarchar(max)	not null,
-	tipoConteudo	varchar(30)		not null,
-	paginaUrl		varchar(500)	not null,
-	tamanhoArquivo	varbinary(max)	not null
+	id					bigint			not null,
+	codigoHTML			nvarchar(max)	not null,
+	tipoConteudo		varchar(30)		not null,
+	paginaUrl			varchar(500)	not null,
+	tamanhoArquivoBytes	int				not null
 	primary key(id)
 )
 go
@@ -137,6 +137,10 @@ begin
 end
 go
 
+declare @saida varchar(100)
+exec sp_usuario 'i', 1, '192.168.30.2', 'teste', @saida output
+print @saida
+
 create procedure sp_sessao (@opc char(1), @sessaoId bigint, @usuarioId bigint, @saida varchar(100) output)
 as
 begin
@@ -195,6 +199,10 @@ begin
 		raiserror('Erro em Sessao: ID nulo', 16, 1)
 	end
 end
+
+declare @saida varchar(100)
+exec sp_sessao 'i', 1, 1, @saida output
+print @saida
 
 go
 create procedure sp_log (@opc char(1), @logId bigint, @mensagem varchar(200), @sessaoId bigint, @saida varchar(100) output)
@@ -275,7 +283,7 @@ begin
 				else if (upper(@opc) = 'U') begin
 					if ((select id from pagina where id = @paginaId) is not null) begin
 						update pagina
-						set codigoHTML = @codigoHTML, tipoConteudo = @tipoConteudo, paginaUrl = @paginaUrl, tamanhoArquivo = @tamanhoArquivo where id = @paginaId
+						set codigoHTML = @codigoHTML, tipoConteudo = @tipoConteudo, paginaUrl = @paginaUrl, tamanhoArquivoBytes = @tamanhoArquivo where id = @paginaId
 						set @saida = 'Pagina #'+cast(@paginaId as varchar(10))+' atualizada com sucesso.'
 					end
 					else begin
@@ -415,3 +423,14 @@ begin
 	end
 end
 
+go
+create trigger t_requisicao on requisicao
+after insert, update
+as
+begin
+
+	if ((select segundos from inserted) > 60) begin
+		raiserror('Timeout: Tempo da requisicao ultrapassou 60s.', 16, 1)
+		rollback transaction
+	end
+end
