@@ -386,3 +386,32 @@ begin
 	end
 end
 
+go
+create procedure sp_pagina_link (@opc char(1), @paginaId bigint, @linkId bigint, @saida varchar(100) output)
+as
+begin
+	if (@paginaId is null or @linkId is null) begin
+		raiserror('Erro em Pagina_Linl: um ou mais IDs nulos.', 16, 1)
+	end
+	else begin
+		if (upper(@opc) = 'I') begin
+			if ((select paginaId from pagina_link where paginaId = @paginaId and linkId = @linkId) is not null) begin
+				raiserror('Erro ao Inserir Pagina_Link: IDs ja existentes.', 16, 1)
+			end
+			else begin
+				insert into pagina_link values (@paginaId, @linkId)
+				set @saida = 'Relacao de Pagina #'+cast(@paginaId as varchar(10))+' e Link #'+cast(@linkId as varchar(10))+' feita com sucesso.'
+			end
+		end
+		else if (upper(@opc) = 'D') begin
+			if ((select paginaId from pagina_link where paginaId = @paginaId and linkId = @linkId) is null) begin
+				raiserror('Erro ao Excluir Pagina_Link: IDs nao existentes.', 16, 1)
+			end
+			else begin
+				delete from pagina_link where paginaId = @paginaId and linkId = @linkId
+				set @saida = 'Relacao de Pagina #'+cast(@paginaId as varchar(10))+' e Link #'+cast(@linkId as varchar(10))+' excluida com sucesso.'
+			end
+		end
+	end
+end
+
