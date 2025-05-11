@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import fateczl.TrabalhoLabBd2.model.Sessao;
 import fateczl.TrabalhoLabBd2.persistence.SessaoRepository;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.Cookie;
+
 
 @Controller
 public class SessaoController {
@@ -34,6 +36,9 @@ public class SessaoController {
 			sessao.setUsuario(usuario);
 			sessao.setUsuario_ip(usuario_ip);
 			sessaoRep.save(sessao);
+			Cookie cookie_sessao_id = new Cookie("sessao_id", sessaoIdStr);
+			cookie_sessao_id.setMaxAge(3600);
+			response.addCookie(cookie_sessao_id);
 			return "novaPagina";
 		}
 		return "index";
