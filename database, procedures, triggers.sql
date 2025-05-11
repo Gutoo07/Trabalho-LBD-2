@@ -434,3 +434,14 @@ begin
 		rollback transaction
 	end
 end
+
+go
+create trigger t_pagina on pagina
+after insert, update
+as 
+begin
+	if ((select tamanhoArquivoBytes from inserted) > 1000000) begin
+		raiserror('Erro ao Inserir/Atualizar Pagina: arquivo > 1MB.', 16, 1)
+		rollback transaction
+	end
+end
