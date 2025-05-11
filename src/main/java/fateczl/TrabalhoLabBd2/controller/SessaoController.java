@@ -30,17 +30,14 @@ public class SessaoController {
 		String usuario = params.get("usuario");
 		String usuario_ip = params.get("usuario_ip");
 		
-		if (!sessaoRep.findById(Long.valueOf(sessaoIdStr)).isPresent()) {
-			Sessao sessao = new Sessao();
-			sessao.setId(Long.valueOf(sessaoIdStr));
-			sessao.setUsuario(usuario);
-			sessao.setUsuario_ip(usuario_ip);
-			sessaoRep.save(sessao);
-			Cookie cookie_sessao_id = new Cookie("sessao_id", sessaoIdStr);
-			cookie_sessao_id.setMaxAge(3600);
-			response.addCookie(cookie_sessao_id);
-			return "novaPagina";
-		}
-		return "index";
+		Sessao sessao = new Sessao();
+		//sessao.setId(Long.valueOf(sessaoIdStr));
+		sessao.setUsuario(usuario);
+		sessao.setUsuario_ip(usuario_ip);
+		sessaoRep.save(sessao);
+		Cookie cookie_sessao_id = new Cookie("sessao_id", sessaoIdStr);
+		cookie_sessao_id.setMaxAge(3600);
+		response.addCookie(cookie_sessao_id);
+		return "novaPagina";
 	}
 }
