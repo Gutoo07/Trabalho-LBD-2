@@ -137,10 +137,6 @@ begin
 end
 go
 
-declare @saida varchar(100)
-exec sp_usuario 'i', 1, '192.168.30.2', 'teste', @saida output
-print @saida
-
 create procedure sp_sessao (@opc char(1), @sessaoId bigint, @usuarioId bigint, @saida varchar(100) output)
 as
 begin
@@ -199,10 +195,6 @@ begin
 		raiserror('Erro em Sessao: ID nulo', 16, 1)
 	end
 end
-
-declare @saida varchar(100)
-exec sp_sessao 'i', 1, 1, @saida output
-print @saida
 
 go
 create procedure sp_log (@opc char(1), @logId bigint, @mensagem varchar(200), @sessaoId bigint, @saida varchar(100) output)
@@ -444,4 +436,14 @@ begin
 		raiserror('Erro ao Inserir/Atualizar Pagina: arquivo > 1MB.', 16, 1)
 		rollback transaction
 	end
+end
+
+go
+create function fn_qtd_referencias_link(@linkId bigint)
+returns int
+as
+begin
+	declare @qtdPaginas int
+	set @qtdPaginas = (select count(linkId) from pagina_link where linkId = @linkId)
+	return @qtdPaginas
 end
