@@ -14,6 +14,8 @@
 	<div align="center">
 		<h2>Upload de Nova Página</h2>
 		<form action="/uploadPagina" method="post" enctype="multipart/form-data">
+            <label for="pagina" style="font-weight: bold;">URL da página:</label><br>
+			<input type="text" id="pagina_url" name="pagina_url">
             <label for="pagina" style="font-weight: bold;">Selecionar arquivos:</label><br>
 			<input type="file" id="pagina" name="pagina">
 			<button type="submit" style="background-color: #2c974b; color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer;">

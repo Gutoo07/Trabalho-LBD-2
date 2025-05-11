@@ -2,6 +2,8 @@ package fateczl.TrabalhoLabBd2.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -13,6 +15,7 @@ import lombok.Setter;
 @Setter
 public class Pagina {
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Long id;
 	@Column(name = "codigo_html", columnDefinition = "NVARCHAR(MAX)", nullable = false)
@@ -22,5 +25,7 @@ public class Pagina {
 	@Column(name = "pagina_url", length = 500, nullable = false)
 	private String pagina_url;
 	@Column(name = "tamanho_arquivo_bytes", nullable = false)
-	private int tamanho_arquivo_bytes;
+	private Long tamanho_arquivo_bytes;
+	@Column(name = "sha1", length = 40, nullable = false)
+	private String sha1;
 }
