@@ -20,7 +20,7 @@ public class Link {
 	private Long id;
 	@Column(name = "url_destino", length = 500, nullable = false)
 	private String url_destino;
-	@Column(name = "titulo", length = 100, nullable = true)
+	@Column(name = "titulo", length = 500, nullable = true)
 	private String titulo;
 	@Column(name = "link_target", length = 7, nullable = false)
 	private String link_target;

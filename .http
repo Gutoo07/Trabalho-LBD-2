@@ -1,0 +1,7 @@
+POST http://localhost:8082/requisicaoPagina?url=https://pt.wikipedia.org/wiki/Número
+
+
+
+###https%3A%2F%2Fpt.wikipedia.org%2Fwiki%2FEstrutura_de_dados
+
+POST http://localhost:8082/uploadPagina

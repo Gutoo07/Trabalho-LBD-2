@@ -24,7 +24,7 @@ public class Requisicao {
 	@Column(name = "codigo_http", length = 200, nullable = false)
 	private String codigo_http;
 	@Column(name = "segundos", nullable = false)
-	private int segundos;
+	private float segundos;
 	
 	@ManyToOne(targetEntity = Sessao.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "sessao_id", nullable = false)

@@ -47,9 +47,11 @@ public class PaginaController {
 		String codigoHtml = new String(is.readAllBytes(), StandardCharsets.UTF_8);
 		pagina.setCodigo_html(codigoHtml);
 		pagina.setPagina_url(paginaUrl);
-		pagina.setSha1(sha1);
+		//pagina.setSha1(sha1);
 		pagina.setTamanho_arquivo_bytes(tamanhoPagina);
 		pagina.setTipo_conteudo(arquivo.getContentType());
 		paginaRep.save(pagina);
 	}
+	
+
 }

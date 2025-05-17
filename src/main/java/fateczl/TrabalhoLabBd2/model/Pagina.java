@@ -26,6 +26,6 @@ public class Pagina {
 	private String pagina_url;
 	@Column(name = "tamanho_arquivo_bytes", nullable = false)
 	private Long tamanho_arquivo_bytes;
-	@Column(name = "sha1", length = 40, nullable = false)
-	private String sha1;
+	/*@Column(name = "sha1", length = 40, nullable = false)
+	private String sha1;*/
 }
