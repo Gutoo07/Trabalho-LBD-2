@@ -52,20 +52,27 @@ public class MappingPages {
 	}
 	
 	@GetMapping("/logs")
-	public String logs(Model model, @RequestParam(required = false) String ip) throws ClassNotFoundException, SQLException {
+	public String logs(Model model, @RequestParam Map<String, String> params) throws ClassNotFoundException, SQLException {
 		List<Logs> list_logs = new ArrayList<>();
+		String ip = params.get("ip");
+		String acao = params.get("acao");
 		
 		if(ip != null && !ip.isEmpty()) {
 			list_logs = repLogs.findBySessaoUsuarioIp(ip);
 			model.addAttribute("logs",list_logs);
 			return "view_logs";
-		}
-		
-		
+		}else if (acao != null && !acao.isEmpty()) {
+			String logId = params.get("id");
+			if (logId != null && !logId.isEmpty()) {
+				Optional<Logs> log = repLogs.findById(Long.valueOf(logId));
+				if (log.isPresent()) {
+					repLogs.delete(log.get());
+				}
+			}
+		}		
 		
 		list_logs = repLogs.findAll();
-		Logs logs = new Logs();
-		
+		Logs logs = new Logs();		
 		
 		model.addAttribute("logs",list_logs);
 		return "view_logs";

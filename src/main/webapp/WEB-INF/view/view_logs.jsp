@@ -108,6 +108,7 @@
 			<c:forEach var="log" items="${logs}">
 			    <tr>
 			        <td>${log.getMensagem()}</td>
+				 	<td><a href="/logs?acao=excluir&id=${log.getId()}">Excluir</a></td>
 				</td>
 			    </tr>
 			</c:forEach>
