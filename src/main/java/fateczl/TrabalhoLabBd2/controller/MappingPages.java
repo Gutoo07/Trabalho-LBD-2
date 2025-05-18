@@ -3,6 +3,7 @@ package fateczl.TrabalhoLabBd2.controller;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,9 +93,11 @@ public class MappingPages {
 	}
 	
 	@GetMapping("/requisicoes")
-	public String requisicoes(Model model, @RequestParam(required = false) String nome,@RequestParam(required = false) String tempo) throws ClassNotFoundException, SQLException {
+	public String requisicoes(Model model, @RequestParam Map<String, String> params) throws ClassNotFoundException, SQLException {
 		List<Requisicao> list_requisicao = new ArrayList<>();
-		
+		String nome = params.get("nome");
+		String tempo = params.get("tempo");
+		String acao = params.get("acao");
 		if(nome != null && !nome.isEmpty()) {
 			list_requisicao = repRequisicao.findBySessaoUsuarioIp(nome);
 			model.addAttribute("requisicoes",list_requisicao);
@@ -103,13 +106,17 @@ public class MappingPages {
 			list_requisicao = repRequisicao.findByTempoMenorQue(Float.parseFloat(tempo));
 			model.addAttribute("requisicoes",list_requisicao);
 			return "view_requisicoes";
-		}
-		
-		
+		}else if(acao != null && !acao.isEmpty()) {
+			String requisicaoId = params.get("id");
+			if (requisicaoId != null && !requisicaoId.isEmpty()) {
+				Optional<Requisicao> requisicao = repRequisicao.findById(Long.valueOf(requisicaoId));
+				if (requisicao.isPresent()) {
+					repRequisicao.delete(requisicao.get());
+				}
+			}
+		}		
 		
 		list_requisicao = repRequisicao.findAll();
-		Requisicao requisicao = new Requisicao();
-		System.out.println("Size: "+list_requisicao.size());
 		model.addAttribute("requisicoes",list_requisicao);
 		return "view_requisicoes";
 	}

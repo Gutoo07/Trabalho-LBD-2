@@ -109,6 +109,7 @@
 	          <th>URL</th>
 	          <th>Status Code</th>
 	          <th>Tempo (s)</th>
+	          <th></th>
 	      </tr>
 	      </thead>
 	      <tbody>
@@ -116,11 +117,9 @@
 		      <tr>
 		          <td>${requisicao.getSessao().getUsuario()}</td>
 		          <td>${requisicao.getPagina().getPaginaUrl()}</td>
-		          <td>${requisicao.getCodigoHttp()}</td>
-				  
-		          <td>
-					<fmt:formatNumber value="${requisicao.getSegundos()}" maxFractionDigits="4" />s
-				</td>
+		          <td>${requisicao.getCodigoHttp()}</td>				  
+		          <td><fmt:formatNumber value="${requisicao.getSegundos()}" maxFractionDigits="4" />s</td>
+				  <td><a href="/requisicoes?acao=excluir&id=${requisicao.getId()}">Excluir</a></td>
 		      </tr>
 		  </c:forEach>
 	      </tbody>
