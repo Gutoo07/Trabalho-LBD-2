@@ -146,16 +146,18 @@ public class MappingPages {
 	}
 	
 	@GetMapping("/paginas")
-	public String paginas(Model model, @RequestParam(required = false) String url, @RequestParam(required = false) String link, @RequestParam(required = false) String size) throws ClassNotFoundException, SQLException {
+	public String paginas(Model model, @RequestParam Map<String, String> params) throws ClassNotFoundException, SQLException {
+		String url = params.get("url");
+		String link = params.get("link");
+		String size = params.get("size");
+		String acao = params.get("acao");
 		
 		List<Pagina> list_pagina = new ArrayList<>();
 		if(url != null && !url.isEmpty()) {
-			System.out.println("UEPA");
 			list_pagina = repPagina.findByPaginaUrl(url);
 			model.addAttribute("paginas", list_pagina);
 			return "view_paginas";
 		}else if(size != null && !size.isEmpty()) {
-			System.out.println("size: "+size);
 			list_pagina = repPagina.findByTamanhoArquivoBytesLessThan((long) (Double.parseDouble(size) * 1048576.0));
 			model.addAttribute("paginas", list_pagina);
 			return "view_paginas";
@@ -163,6 +165,18 @@ public class MappingPages {
 			list_pagina = repPagina.findPaginasByLinkUrlDestino(link);
 			model.addAttribute("paginas", list_pagina);
 			return "view_paginas";
+		}else if (acao != null && !acao.isEmpty()) {
+			String paginaId = params.get("id");
+			if (paginaId != null && !paginaId.isEmpty()) {
+				Optional<Pagina> pagina = repPagina.findById(Long.valueOf(paginaId));
+				if (pagina.isPresent()) {
+					List<Requisicao> requisicoes = repRequisicao.findByPagina(pagina.get());
+					for (Requisicao r : requisicoes) {
+						repRequisicao.delete(r);
+					}
+					repPagina.delete(pagina.get());
+				}
+			}
 		}
 		
 		list_pagina = repPagina.findAll();

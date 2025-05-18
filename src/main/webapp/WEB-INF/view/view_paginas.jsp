@@ -118,6 +118,7 @@
               <th>Content-Type</th>
               <th>Size</th>
               <th>Detalhes</th>
+              <th></th>
           </tr>
           </thead>
           <tbody>
@@ -125,11 +126,9 @@
 	            <tr>
 	                <td>${pagina.getPaginaUrl()}</td>
 	                <td>${pagina.getTipoConteudo()}</td>
-					<td>
-					  <fmt:formatNumber value="${pagina.getTamanhoArquivoBytes() / 1048576.0}" maxFractionDigits="4" />
-					  MB
-					</td>
+					<td><fmt:formatNumber value="${pagina.getTamanhoArquivoBytes() / 1048576.0}" maxFractionDigits="4" />MB</td>
 	                <td><button onclick="window.location.href='/page_detail?pageId=${pagina.getId()}';">Ver</button></td>
+				 	<td><a href="/paginas?acao=excluir&id=${pagina.getId()}">Excluir</a></td>
 	            </tr>
 			</c:forEach>
           </tbody>
