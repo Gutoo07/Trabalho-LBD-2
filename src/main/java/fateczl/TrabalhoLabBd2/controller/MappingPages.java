@@ -62,11 +62,18 @@ public class MappingPages {
 			model.addAttribute("logs",list_logs);
 			return "view_logs";
 		}else if (acao != null && !acao.isEmpty()) {
+			if (acao.equals("excluir")) {
 			String logId = params.get("id");
-			if (logId != null && !logId.isEmpty()) {
-				Optional<Logs> log = repLogs.findById(Long.valueOf(logId));
-				if (log.isPresent()) {
-					repLogs.delete(log.get());
+				if (logId != null && !logId.isEmpty()) {
+					Optional<Logs> log = repLogs.findById(Long.valueOf(logId));
+					if (log.isPresent()) {
+						repLogs.delete(log.get());
+					}
+				}
+			} else if (acao.equals("limpar")) {
+				List<Logs> logs = repLogs.findAll();
+				for (Logs l : logs) {
+					repLogs.delete(l);
 				}
 			}
 		}		
@@ -89,24 +96,38 @@ public class MappingPages {
 			model.addAttribute("sessoes",list_sessao);
 			return "view_sessoes";
 		}else if (acao != null && !acao.isEmpty()) {
-			String sessaoId = params.get("id");
-			if (sessaoId != null && !sessaoId.isEmpty()) {
-				Optional<Sessao> sessao = repSessao.findById(Long.valueOf(sessaoId));
-				if (sessao.isPresent()) {
-					List<Logs> logs = repLogs.findBySessao(sessao.get());
+			if (acao.equals("excluir")) {
+				String sessaoId = params.get("id");
+				if (sessaoId != null && !sessaoId.isEmpty()) {
+					Optional<Sessao> sessao = repSessao.findById(Long.valueOf(sessaoId));
+					if (sessao.isPresent()) {
+						List<Logs> logs = repLogs.findBySessao(sessao.get());
+						for (Logs l : logs) {
+							repLogs.delete(l);
+						}
+						List<Requisicao> requisicoes = repRequisicao.findBySessao(sessao.get());
+						for (Requisicao r : requisicoes) {
+							repRequisicao.delete(r);
+						}
+						repSessao.delete(sessao.get());
+					}
+				}
+			} else if (acao.equals("limpar")) {
+				List<Sessao> sessoes = repSessao.findAll();
+				for (Sessao s : sessoes) {
+					List<Logs> logs = repLogs.findBySessao(s);
 					for (Logs l : logs) {
 						repLogs.delete(l);
 					}
-					List<Requisicao> requisicoes = repRequisicao.findBySessao(sessao.get());
+					List<Requisicao> requisicoes = repRequisicao.findBySessao(s);
 					for (Requisicao r : requisicoes) {
 						repRequisicao.delete(r);
 					}
-					repSessao.delete(sessao.get());
+					repSessao.delete(s);
 				}
+				return "index";
 			}
-		}
-		
-		
+		}		
 		
 		list_sessao = repSessao.findAll();
 		Sessao sessao = new Sessao();
@@ -131,11 +152,18 @@ public class MappingPages {
 			model.addAttribute("requisicoes",list_requisicao);
 			return "view_requisicoes";
 		}else if(acao != null && !acao.isEmpty()) {
+			if (acao.equals("excluir")) {
 			String requisicaoId = params.get("id");
-			if (requisicaoId != null && !requisicaoId.isEmpty()) {
-				Optional<Requisicao> requisicao = repRequisicao.findById(Long.valueOf(requisicaoId));
-				if (requisicao.isPresent()) {
-					repRequisicao.delete(requisicao.get());
+				if (requisicaoId != null && !requisicaoId.isEmpty()) {
+					Optional<Requisicao> requisicao = repRequisicao.findById(Long.valueOf(requisicaoId));
+					if (requisicao.isPresent()) {
+						repRequisicao.delete(requisicao.get());
+					}
+				}
+			} else if (acao.equals("limpar")) {
+				List<Requisicao> requisicoes = repRequisicao.findAll();
+				for (Requisicao r : requisicoes) {
+					repRequisicao.delete(r);
 				}
 			}
 		}		
@@ -166,15 +194,26 @@ public class MappingPages {
 			model.addAttribute("paginas", list_pagina);
 			return "view_paginas";
 		}else if (acao != null && !acao.isEmpty()) {
-			String paginaId = params.get("id");
-			if (paginaId != null && !paginaId.isEmpty()) {
-				Optional<Pagina> pagina = repPagina.findById(Long.valueOf(paginaId));
-				if (pagina.isPresent()) {
-					List<Requisicao> requisicoes = repRequisicao.findByPagina(pagina.get());
+			if (acao.equals("excluir")) {
+				String paginaId = params.get("id");
+				if (paginaId != null && !paginaId.isEmpty()) {
+					Optional<Pagina> pagina = repPagina.findById(Long.valueOf(paginaId));
+					if (pagina.isPresent()) {
+						List<Requisicao> requisicoes = repRequisicao.findByPagina(pagina.get());
+						for (Requisicao r : requisicoes) {
+							repRequisicao.delete(r);
+						}
+						repPagina.delete(pagina.get());
+					}
+				}
+			} else if (acao.equals("limpar")) {
+				List<Pagina> paginas = repPagina.findAll();
+				for (Pagina p : paginas) {
+					List<Requisicao> requisicoes = repRequisicao.findByPagina(p);
 					for (Requisicao r : requisicoes) {
 						repRequisicao.delete(r);
 					}
-					repPagina.delete(pagina.get());
+					repPagina.delete(p);
 				}
 			}
 		}

@@ -91,6 +91,10 @@
         <input type="text" id="ip_log" name="ip">
         <button type="submit">Buscar</button>
     </form>
+    <form action="/logs" method="get">
+        <input type="hidden" id="acao" name="acao" value="limpar">
+        <button type="submit">Excluir Logs</button>
+    </form>
     </div>
 
      

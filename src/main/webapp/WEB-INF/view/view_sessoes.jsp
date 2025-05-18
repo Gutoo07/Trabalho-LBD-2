@@ -91,6 +91,10 @@
         <input type="text" id="ip" name="ip">
         <button type="submit">Buscar</button>
     </form>
+    <form action="/sessoes" method="get">
+        <input type="hidden" id="acao" name="acao" value="limpar">
+        <button type="submit">Excluir Sessões</button>
+    </form>
     </div>
 
     

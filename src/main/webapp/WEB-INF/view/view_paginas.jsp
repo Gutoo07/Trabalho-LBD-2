@@ -86,29 +86,31 @@
     <h1 style="margin-top: 50px; margin-bottom: 50px;">Páginas</h1>
 
     <div class="container">
-    <h2>Filtrar</h2>
-    <form action="/paginas" method="get">
-        <label for="link">Buscar páginas por link:</label>
-        <input type="text" id="link" name="link">
-        <button type="submit">Buscar</button>
-    </form>
-
-    <form action="/paginas" method="get">
-        <label for="url">Buscar páginas por URL:</label>
-        <input type="text" id="url" name="url">
-        <button type="submit">Buscar</button>
-    </form>
-
-    <form action="/paginas" method="get">
-        <label for="tamanho">Buscar páginas com tamanho menor que (megabytes):</label>
-        <input type="number" id="size" name="size" step="0.01">
-        <button type="submit">Buscar</button>
-    </form>
-    </div>
-
-    
-    </div>
-
+	    <h2>Filtrar</h2>
+	    <form action="/paginas" method="get">
+	        <label for="link">Buscar páginas por link:</label>
+	        <input type="text" id="link" name="link">
+	        <button type="submit">Buscar</button>
+	    </form>
+	
+	    <form action="/paginas" method="get">
+	        <label for="url">Buscar páginas por URL:</label>
+	        <input type="text" id="url" name="url">
+	        <button type="submit">Buscar</button>
+	    </form>
+	
+	    <form action="/paginas" method="get">
+	        <label for="tamanho">Buscar páginas com tamanho menor que (megabytes):</label>
+	        <input type="number" id="size" name="size" step="0.01">
+	        <button type="submit">Buscar</button>
+	    </form>
+	    
+	    
+	    <form action="/paginas" method="get">
+	        <input type="hidden" id="acao" name="acao" value="limpar">
+	        <button type="submit">Excluir Páginas</button>
+	    </form>
+	</div>
       <div class="container">
       <h2>Visualizar</h2>
       <table>

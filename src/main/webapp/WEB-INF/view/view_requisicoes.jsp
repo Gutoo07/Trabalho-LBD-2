@@ -97,6 +97,11 @@
         <input type="number" id="tempo" name="tempo" step="0.001">
         <button type="submit">Buscar</button>
     </form>
+    
+    <form action="/requisicoes" method="get">
+        <input type="hidden" id="acao" name="acao" value="limpar">
+        <button type="submit">Excluir Requisições</button>
+    </form>
 
     </div>
 
