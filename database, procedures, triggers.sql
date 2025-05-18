@@ -521,3 +521,5 @@ begin
 		rollback transaction
 	end
 end
+
+delete  from pagina

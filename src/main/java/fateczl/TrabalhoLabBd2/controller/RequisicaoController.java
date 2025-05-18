@@ -20,6 +20,7 @@ import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -59,7 +60,7 @@ public class RequisicaoController {
 	
 
 	@PostMapping("/requisicaoPagina")
-	public String requisicaoPagina(@RequestParam String url, Model model, @CookieValue(name = "sessao_id", required = false) String sessao_cookie) throws IOException, NoSuchAlgorithmException, InterruptedException {
+	public String requisicaoPagina(@RequestParam String url, ModelMap model, @CookieValue(name = "sessao_id", required = false) String sessao_cookie) throws IOException, NoSuchAlgorithmException, InterruptedException {
 		
 		
 		String baseUrl = url.replaceAll("^(https?://[^/]+).*", "$1");
