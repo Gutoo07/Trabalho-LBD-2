@@ -27,15 +27,18 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import fateczl.TrabalhoLabBd2.model.Link;
+import fateczl.TrabalhoLabBd2.model.Logs;
 import fateczl.TrabalhoLabBd2.model.Pagina;
 import fateczl.TrabalhoLabBd2.model.PaginaLinkId;
 import fateczl.TrabalhoLabBd2.model.Pagina_Link;
 import fateczl.TrabalhoLabBd2.model.Requisicao;
 import fateczl.TrabalhoLabBd2.model.Sessao;
 import fateczl.TrabalhoLabBd2.persistence.LinkRepository;
+import fateczl.TrabalhoLabBd2.persistence.LogsRepository;
 import fateczl.TrabalhoLabBd2.persistence.PaginaRepository;
 import fateczl.TrabalhoLabBd2.persistence.Pagina_LinkRepository;
 import fateczl.TrabalhoLabBd2.persistence.RequisicaoRepository;
+import fateczl.TrabalhoLabBd2.persistence.SessaoRepository;
 
 @Controller
 public class RequisicaoController {
@@ -48,6 +51,10 @@ public class RequisicaoController {
 	private LinkRepository linkRep;
 	@Autowired
 	private Pagina_LinkRepository linkPaginaRep;
+	@Autowired
+	private LogsRepository logsRep;
+	@Autowired
+	private SessaoRepository sessaoRep;
 
 	
 
@@ -138,8 +145,8 @@ public class RequisicaoController {
         
         
         
-        Sessao sessao = new Sessao();
-        sessao.setId(Long.parseLong(sessao_cookie));
+        Sessao sessao = sessaoRep.getById(Long.parseLong(sessao_cookie));
+        sessao.setId(sessao.getId());
         Requisicao requisicao = new Requisicao();
         try {
 	        // Salvar Requisicao
@@ -182,8 +189,19 @@ public class RequisicaoController {
             
             return "requisicao";
         }
+        
+        
+        Logs log = new Logs();
+        
+        log.setSessao(sessao);
+        log.setMensagem("["+sessao.getUsuario()+"]"+" : "+sessao.getUsuarioIp()+" >> Acessou : "+pagina.getPaginaUrl());
+        
 
+        
+        logsRep.save(log);
+        
         // Exibir informações
+        System.out.println();
         System.out.println("BaseUrl: "+baseUrl);
         System.out.println("Url: " + url);
         System.out.println("Tipo: "+ tipo);

@@ -21,7 +21,6 @@ public interface PaginaRepository extends JpaRepository<Pagina, Long> {
     
     List<Pagina> findByTamanhoArquivoBytesLessThan(Long tamanho);
 
-    
     @Query("SELECT p FROM Pagina p " +
     	       "JOIN Pagina_Link pl ON p.id = pl.paginaLinkId.paginaId " +
     	       "JOIN Link l ON pl.paginaLinkId.linkId = l.id " +

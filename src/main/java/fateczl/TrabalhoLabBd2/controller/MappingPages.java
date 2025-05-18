@@ -3,6 +3,7 @@ package fateczl.TrabalhoLabBd2.controller;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,14 +11,34 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import fateczl.TrabalhoLabBd2.model.Link;
+import fateczl.TrabalhoLabBd2.model.Logs;
 import fateczl.TrabalhoLabBd2.model.Pagina;
+import fateczl.TrabalhoLabBd2.model.Requisicao;
+import fateczl.TrabalhoLabBd2.model.Sessao;
+import fateczl.TrabalhoLabBd2.persistence.LinkRepository;
+import fateczl.TrabalhoLabBd2.persistence.LogsRepository;
 import fateczl.TrabalhoLabBd2.persistence.PaginaRepository;
+import fateczl.TrabalhoLabBd2.persistence.RequisicaoRepository;
+import fateczl.TrabalhoLabBd2.persistence.SessaoRepository;
 
 @Controller
 public class MappingPages {
 	
 	@Autowired
 	private PaginaRepository repPagina;
+	
+	@Autowired
+	private SessaoRepository repSessao;
+	
+	@Autowired
+	private RequisicaoRepository repRequisicao;
+	
+	@Autowired
+	private LogsRepository repLogs;
+	
+	@Autowired
+	private LinkRepository repLink;
 	
 	@GetMapping("/")
 	public String home(Model model) throws ClassNotFoundException, SQLException {
@@ -30,18 +51,66 @@ public class MappingPages {
 	}
 	
 	@GetMapping("/logs")
-	public String logs(Model model) throws ClassNotFoundException, SQLException {
-	
+	public String logs(Model model, @RequestParam(required = false) String ip) throws ClassNotFoundException, SQLException {
+		List<Logs> list_logs = new ArrayList<>();
+		
+		if(ip != null && !ip.isEmpty()) {
+			list_logs = repLogs.findBySessaoUsuarioIp(ip);
+			model.addAttribute("logs",list_logs);
+			return "view_logs";
+		}
+		
+		
+		
+		list_logs = repLogs.findAll();
+		Logs logs = new Logs();
+		
+		
+		model.addAttribute("logs",list_logs);
 		return "view_logs";
 	}
 	
 	@GetMapping("/sessoes")
-	public String sessoes(Model model) throws ClassNotFoundException, SQLException {
+	public String sessoes(Model model, @RequestParam(required = false) String ip) throws ClassNotFoundException, SQLException {
+		
+		List<Sessao> list_sessao = new ArrayList<>();
+		
+		if(ip != null && !ip.isEmpty()) {
+			list_sessao = repSessao.findByUsuarioIp(ip);
+			model.addAttribute("sessoes",list_sessao);
+			return "view_sessoes";
+		}
+		
+		
+		
+		list_sessao = repSessao.findAll();
+		Sessao sessao = new Sessao();
+		
+		model.addAttribute("sessoes",list_sessao);
+		
 		return "view_sessoes";
 	}
 	
 	@GetMapping("/requisicoes")
-	public String requisicoes(Model model) throws ClassNotFoundException, SQLException {
+	public String requisicoes(Model model, @RequestParam(required = false) String nome,@RequestParam(required = false) String tempo) throws ClassNotFoundException, SQLException {
+		List<Requisicao> list_requisicao = new ArrayList<>();
+		
+		if(nome != null && !nome.isEmpty()) {
+			list_requisicao = repRequisicao.findBySessaoUsuarioIp(nome);
+			model.addAttribute("requisicoes",list_requisicao);
+			return "view_requisicoes";
+		}else if(tempo != null && !tempo.isEmpty()) {
+			list_requisicao = repRequisicao.findByTempoMenorQue(Float.parseFloat(tempo));
+			model.addAttribute("requisicoes",list_requisicao);
+			return "view_requisicoes";
+		}
+		
+		
+		
+		list_requisicao = repRequisicao.findAll();
+		Requisicao requisicao = new Requisicao();
+		System.out.println("Size: "+list_requisicao.size());
+		model.addAttribute("requisicoes",list_requisicao);
 		return "view_requisicoes";
 	}
 	
@@ -69,5 +138,18 @@ public class MappingPages {
 		model.addAttribute("paginas", list_pagina);
 
 		return "view_paginas";
+	}
+	
+	@GetMapping("/page_detail")
+	public String page_detail(Model model, @RequestParam(required = false) String pageId) throws ClassNotFoundException, SQLException {
+		
+		if(pageId != null && !pageId.isEmpty()) {
+			Optional<Pagina> pagina = repPagina.findById(Long.parseLong(pageId));
+			List<Link> list_link = repLink.findLinksByPaginaId(Long.parseLong(pageId));	
+			model.addAttribute("pagina", pagina.get());
+			model.addAttribute("links", list_link);
+			return "page_detail";
+		}
+		return "page_detail";
 	}
 }

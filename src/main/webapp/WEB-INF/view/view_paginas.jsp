@@ -129,7 +129,7 @@
 					  <fmt:formatNumber value="${pagina.getTamanhoArquivoBytes() / 1048576.0}" maxFractionDigits="4" />
 					  MB
 					</td>
-	                <td><button>Ver</button></td>
+	                <td><button onclick="window.location.href='/page_detail?pageId=${pagina.getId()}';">Ver</button></td>
 	            </tr>
 			</c:forEach>
           </tbody>

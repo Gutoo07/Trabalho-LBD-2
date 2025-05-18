@@ -86,7 +86,7 @@
 
     <div class="container">
     <h2>Visualizar Logs</h2>
-    <form action="/buscar-log-por-ip" method="get">
+    <form action="/logs" method="get">
         <label for="ip_log">Buscar logs por IP:</label>
         <input type="text" id="ip_log" name="ip">
         <button type="submit">Buscar</button>
@@ -105,12 +105,12 @@
           </tr>
           </thead>
           <tbody>
-            <tr>
-                <td>[Kevin] : 127.0.0.1 >> Acessou : siga.cps.sp.gov.br</td>
-            </tr>
-            <tr>
-                <td>[Gustavo] : 10.15.76.55 >> Acessou : www.example.com</td>
-            </tr>
+			<c:forEach var="log" items="${logs}">
+			    <tr>
+			        <td>${log.getMensagem()}</td>
+				</td>
+			    </tr>
+			</c:forEach>
           </tbody>
       </table>
 

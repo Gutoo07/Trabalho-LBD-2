@@ -86,7 +86,7 @@
 
     <div class="container">
     <h2>Visualizar Sessões</h2>
-    <form action="/buscar-sessao-por-ip" method="get">
+    <form action="/sessoes" method="get">
         <label for="ip">Buscar sessões por IP:</label>
         <input type="text" id="ip" name="ip">
         <button type="submit">Buscar</button>
@@ -106,14 +106,12 @@
           </tr>
           </thead>
           <tbody>
-            <tr>
-                <td>Kevin</td>
-                <td>127.0.0.1</td>
-            </tr>
-            <tr>
-                <td>Gustavo</td>
-                <td>10.15.76.55</td>
-            </tr>
+			<c:forEach var="sessao" items="${sessoes}">
+	            <tr>
+	                <td>${sessao.getUsuario()}</td>
+	                <td>${sessao.getUsuarioIp()}</td>
+	            </tr>
+			</c:forEach>
           </tbody>
       </table>
 
