@@ -12,6 +12,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -61,46 +63,48 @@ public class RequisicaoController {
 	
 
 	@PostMapping("/requisicaoPagina")
-	public String requisicaoPagina(@RequestParam String url, ModelMap model, @CookieValue(name = "sessao_id", required = false) String sessao_cookie) throws IOException, NoSuchAlgorithmException, InterruptedException {
-		
+	public String requisicaoPagina(@RequestParam String url, @RequestParam(required = false) String method, ModelMap model, @CookieValue(name = "sessao_id", required = false) String sessao_cookie) throws IOException, NoSuchAlgorithmException, InterruptedException {
 		
 		String baseUrl = url.replaceAll("^(https?://[^/]+).*", "$1");
 		
 		List<Link> link_list = new ArrayList<>();
 		boolean hasLink = false;
-		try {
-			Document doc = Jsoup.connect(url).get();
-			Elements links = doc.select("a[href]");
-			for (Element link : links) {
-			    String href = link.attr("href");
-			    String title = link.attr("title");
-			    title = (title.isEmpty()) ? link.text() : title;
-	
-	
-			    if (href.startsWith("http")) {
-			    	Link link_obj = new Link();
-			    	link_obj.setLinkTarget("_blank");
-			    	link_obj.setTitulo(title);
-			    	link_obj.setUrlDestino(href);
-			    	link_list.add(link_obj);
-			        //System.out.printf("Link outra Pagina | Title:%s Link:%s\n",title, href);
-			    } else if (href.startsWith("/")) {
-			    	Link link_obj = new Link();
-			    	link_obj.setLinkTarget("_self");
-			    	link_obj.setTitulo(title);
-			    	link_obj.setUrlDestino(baseUrl+href);
-			    	link_list.add(link_obj);
-			        //System.out.printf("Link Pagina | Title:%s | Link:%s\n",title, href);
-			    } 
-			    
-			    hasLink = true;
-	
+		if (method != null) {
+			if (method.equals("GET")) {
+				try {
+					Document doc = Jsoup.connect(url).get();
+					Elements links = doc.select("a[href]");
+					for (Element link : links) {
+					    String href = link.attr("href");
+					    String title = link.attr("title");
+					    title = (title.isEmpty()) ? link.text() : title;
+			
+			
+					    if (href.startsWith("http")) {
+					    	Link link_obj = new Link();
+					    	link_obj.setLinkTarget("_blank");
+					    	link_obj.setTitulo(title);
+					    	link_obj.setUrlDestino(href);
+					    	link_list.add(link_obj);
+					        //System.out.printf("Link outra Pagina | Title:%s Link:%s\n",title, href);
+					    } else if (href.startsWith("/")) {
+					    	Link link_obj = new Link();
+					    	link_obj.setLinkTarget("_self");
+					    	link_obj.setTitulo(title);
+					    	link_obj.setUrlDestino(baseUrl+href);
+					    	link_list.add(link_obj);
+					        //System.out.printf("Link Pagina | Title:%s | Link:%s\n",title, href);
+					    } 
+					    
+					    hasLink = true;
+			
+					}
+				}catch(Exception e) {
+		            model.addAttribute("erro", "Digite uma Url Válida!");            
+					return "requisicao";
+				}
 			}
-		}catch(Exception e) {
-            model.addAttribute("erro", "Digite uma Url Válida!");            
-			return "requisicao";
 		}
-
 		
 		
 		System.out.println("DEBUG 01");
@@ -147,8 +151,8 @@ public class RequisicaoController {
         
         
         
-        Sessao sessao = sessaoRep.getById(Long.parseLong(sessao_cookie));
-        sessao.setId(sessao.getId());
+        Optional<Sessao> sessao = sessaoRep.findById(Long.parseLong(sessao_cookie));
+        //sessao.setId(sessao.getId());
         Requisicao requisicao = new Requisicao();
         try {
 	        // Salvar Requisicao
@@ -157,7 +161,7 @@ public class RequisicaoController {
 	        requisicao.setCodigoHttp(String.valueOf(statusCode));
 	        requisicao.setPagina(pagina);
 	        requisicao.setSegundos(ms/1000);
-	        requisicao.setSessao(sessao);
+	        requisicao.setSessao(sessao.get());
 	        requisicaoRep.save(requisicao);
 	        
 	        
@@ -195,8 +199,8 @@ public class RequisicaoController {
         
         Logs log = new Logs();
         
-        log.setSessao(sessao);
-        log.setMensagem("["+sessao.getUsuario()+"]"+" : "+sessao.getUsuarioIp()+" >> Acessou : "+pagina.getPaginaUrl());
+        log.setSessao(sessao.get());
+        log.setMensagem("["+sessao.get().getUsuario()+"]"+" : "+sessao.get().getUsuarioIp()+" >> Acessou : "+pagina.getPaginaUrl());
         
 
         

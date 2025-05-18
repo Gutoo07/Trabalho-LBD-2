@@ -79,14 +79,31 @@ public class MappingPages {
 	}
 	
 	@GetMapping("/sessoes")
-	public String sessoes(Model model, @RequestParam(required = false) String ip) throws ClassNotFoundException, SQLException {
-		
+	public String sessoes(Model model, @RequestParam Map<String, String> params) throws ClassNotFoundException, SQLException {
+		String ip = params.get("ip");
+		String acao = params.get("acao");
 		List<Sessao> list_sessao = new ArrayList<>();
 		
 		if(ip != null && !ip.isEmpty()) {
 			list_sessao = repSessao.findByUsuarioIp(ip);
 			model.addAttribute("sessoes",list_sessao);
 			return "view_sessoes";
+		}else if (acao != null && !acao.isEmpty()) {
+			String sessaoId = params.get("id");
+			if (sessaoId != null && !sessaoId.isEmpty()) {
+				Optional<Sessao> sessao = repSessao.findById(Long.valueOf(sessaoId));
+				if (sessao.isPresent()) {
+					List<Logs> logs = repLogs.findBySessao(sessao.get());
+					for (Logs l : logs) {
+						repLogs.delete(l);
+					}
+					List<Requisicao> requisicoes = repRequisicao.findBySessao(sessao.get());
+					for (Requisicao r : requisicoes) {
+						repRequisicao.delete(r);
+					}
+					repSessao.delete(sessao.get());
+				}
+			}
 		}
 		
 		

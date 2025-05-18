@@ -2,6 +2,7 @@ package fateczl.TrabalhoLabBd2.interceptor;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Enumeration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,17 +24,24 @@ public class Interceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request,
 			HttpServletResponse response,
 			Object handler, ModelAndView mv) throws NoSuchAlgorithmException, IOException, InterruptedException {
-
-		if (request.getMethod().equals("GET")) {
-			Cookie[] cookies = request.getCookies();
-			if (cookies != null) {
-				for (Cookie c : cookies) {
-					if (c.getName().equals("sessao_id")) {
-						String url = request.getRequestURL().toString();
-						requisicaoController.requisicaoPagina(url, mv.getModelMap(), c.getValue());
+		if (mv != null) {
+			//if (request.getMethod().equals("GET")) {
+				Cookie[] cookies = request.getCookies();
+				if (cookies != null) {
+					for (Cookie c : cookies) {
+						if (c.getName().equals("sessao_id")) {
+							String url = request.getRequestURL().toString();
+							String method = request.getMethod();
+							if (method.equals("GET")) {
+								requisicaoController.requisicaoPagina(url, method, mv.getModelMap(), c.getValue());
+							} else if (method.equals("POST")) {
+								System.out.println("===================="+url);
+								requisicaoController.requisicaoPagina(url, method, mv.getModelMap(), c.getValue());
+							}
+						}
 					}
 				}
-			}
+			//}
 		}
 	}
 

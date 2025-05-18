@@ -103,6 +103,7 @@
           <tr>
               <th>Nome</th>
               <th>IP</th>
+              <th></th>
           </tr>
           </thead>
           <tbody>
@@ -110,6 +111,7 @@
 	            <tr>
 	                <td>${sessao.getUsuario()}</td>
 	                <td>${sessao.getUsuarioIp()}</td>
+					<td><a href="/sessoes?acao=excluir&id=${sessao.getId()}">Excluir</a></td>
 	            </tr>
 			</c:forEach>
           </tbody>
