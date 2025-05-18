@@ -19,9 +19,9 @@ public class Link {
 	@Column(name = "id", nullable = false)
 	private Long id;
 	@Column(name = "url_destino", length = 500, nullable = false)
-	private String url_destino;
+	private String urlDestino;
 	@Column(name = "titulo", length = 500, nullable = true)
 	private String titulo;
 	@Column(name = "link_target", length = 7, nullable = false)
-	private String link_target;
+	private String linkTarget;
 }

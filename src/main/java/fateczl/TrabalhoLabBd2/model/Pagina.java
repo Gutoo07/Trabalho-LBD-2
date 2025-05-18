@@ -14,18 +14,23 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Pagina {
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name = "id", nullable = false)
-	private Long id;
-	@Column(name = "codigo_html", columnDefinition = "NVARCHAR(MAX)", nullable = false)
-	private String codigo_html;
-	@Column(name = "tipo_conteudo", length = 30, nullable = false)
-	private String tipo_conteudo;
-	@Column(name = "pagina_url", length = 500, nullable = false)
-	private String pagina_url;
-	@Column(name = "tamanho_arquivo_bytes", nullable = false)
-	private Long tamanho_arquivo_bytes;
-	/*@Column(name = "sha1", length = 40, nullable = false)
-	private String sha1;*/
+    @Id
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
+
+    @Column(name = "codigo_html", columnDefinition = "NVARCHAR(MAX)", nullable = false)
+    private String codigoHtml;
+
+    @Column(name = "tipo_conteudo", length = 30, nullable = false)
+    private String tipoConteudo;
+
+    @Column(name = "pagina_url", length = 500, nullable = false)
+    private String paginaUrl;
+
+    @Column(name = "tamanho_arquivo_bytes", nullable = false)
+    private Long tamanhoArquivoBytes;
+
+    /*@Column(name = "sha1", length = 40, nullable = false)
+    private String sha1;*/
 }

@@ -9,5 +9,5 @@ import fateczl.TrabalhoLabBd2.model.Sessao;
 
 @Repository
 public interface SessaoRepository extends JpaRepository<Sessao, Long>{
-	public List<Sessao> findByUsuario_ip(String usuario_ip);
+	public List<Sessao> findByUsuarioIp(String usuario_ip);
 }

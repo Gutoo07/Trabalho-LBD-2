@@ -45,11 +45,11 @@ public class PaginaController {
 		Pagina pagina = new Pagina();
 		InputStream is = arquivo.getInputStream();
 		String codigoHtml = new String(is.readAllBytes(), StandardCharsets.UTF_8);
-		pagina.setCodigo_html(codigoHtml);
-		pagina.setPagina_url(paginaUrl);
+		pagina.setCodigoHtml(codigoHtml);
+		pagina.setPaginaUrl(paginaUrl);
 		//pagina.setSha1(sha1);
-		pagina.setTamanho_arquivo_bytes(tamanhoPagina);
-		pagina.setTipo_conteudo(arquivo.getContentType());
+		pagina.setTamanhoArquivoBytes(tamanhoPagina);
+		pagina.setTipoConteudo(arquivo.getContentType());
 		paginaRep.save(pagina);
 	}
 	

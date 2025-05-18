@@ -10,8 +10,8 @@ import fateczl.TrabalhoLabBd2.model.Requisicao;
 
 @Repository
 public interface RequisicaoRepository extends JpaRepository<Requisicao, Long>{
-	@Query("SELECT r FROM requisicao r WHERE r.segundos <?1")
+	@Query("SELECT r FROM Requisicao r WHERE r.segundos <?1")
 	public List<Requisicao> findByTempoMenorQue(Float segundos);
-	@Query("SELECT r FROM requisicao r JOIN r.sessao s WHERE s.usuario =?1")
-	public List<Requisicao> findBySessaoUsuario_ip(String usuario);
+	@Query("SELECT r FROM Requisicao r JOIN r.sessao s WHERE s.usuario =?1")
+	public List<Requisicao> findBySessaoUsuarioIp(String usuario);
 }

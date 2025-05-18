@@ -10,6 +10,6 @@ import fateczl.TrabalhoLabBd2.model.Logs;
 
 @Repository	
 public interface LogsRepository extends JpaRepository<Logs, Long>{
-	@Query("SELECT l FROM logs l JOIN l.sessao s WHERE s.usuario_ip =?1")
-	public List<Logs> findBySessaoUsuario_ip(String usuario_ip);
+	@Query("SELECT l FROM Logs l JOIN l.sessao s WHERE s.usuarioIp =?1")
+	public List<Logs> findBySessaoUsuarioIp(String usuario_ip);
 }

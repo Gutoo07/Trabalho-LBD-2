@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Detalhes da Página</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f2f2f2;
+      padding-top: 100px;
+    }
+
+    .menu {
+      background-color: rgb(32, 55, 156);
+      padding: 15px;
+      border-radius: 0 0 8px 8px;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+    }
+
+    .menu nav {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .menu nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 50px;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #333;
+    }
+
+    .info {
+      margin-bottom: 30px;
+    }
+
+    .info p {
+      margin: 8px 0;
+      color: #555;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #2865e9;
+      color: white;
+    }
+
+    tr:hover {
+      background-color: #f5f5f5;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="menu">
+    <nav>
+      <a href="/nova-sessao">Nova Sessão</a>
+      <a href="/pagina">Nova Requisição</a>
+      <a href="/pagina">Página</a>
+      <a href="/sessoes">Sessões</a>
+      <a href="/logs">Logs</a>
+      <a href="/requisicoes">Requisições</a>
+    </nav>
+  </div>
+
+  <div class="container">
+    <h1>Detalhes da Página</h1>
+
+    <div class="info">
+      <p><strong>URL:</strong> https://www.exemplo.com/pagina.html</p>
+      <p><strong>Content-Type:</strong> text/html</p>
+      <p><strong>Tamanho:</strong> 128 KB</p>
+      <p><strong>Título:</strong> Página de Exemplo</p>
+      <p><strong>Data de Captura:</strong> 18/05/2025</p>
+    </div>
+
+    <h2>Links Encontrados</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Texto do Link</th>
+          <th>URL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Home</td>
+          <td>https://www.exemplo.com</td>
+        </tr>
+        <tr>
+          <td>Contato</td>
+          <td>https://www.exemplo.com/contato</td>
+        </tr>
+        <tr>
+          <td>Sobre Nós</td>
+          <td>https://www.exemplo.com/sobre</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</body>
+</html>

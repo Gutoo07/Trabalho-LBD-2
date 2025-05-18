@@ -26,18 +26,19 @@ public class SessaoController {
 	public String novaSessao (@RequestParam Map<String, String> params, ModelMap model, HttpServletResponse response,
 			@CookieValue(value = "sessao", defaultValue = "") Long sessaoId) 
 			throws ClassNotFoundException, SQLException {
-		String sessaoIdStr = params.get("sessao_id");
+		Long sessaoIdStr = 0L;
 		String usuario = params.get("usuario");
 		String usuario_ip = params.get("usuario_ip");
 		
 		Sessao sessao = new Sessao();
 		//sessao.setId(Long.valueOf(sessaoIdStr));
 		sessao.setUsuario(usuario);
-		sessao.setUsuario_ip(usuario_ip);
+		sessao.setUsuarioIp(usuario_ip);
 		sessaoRep.save(sessao);
-		Cookie cookie_sessao_id = new Cookie("sessao_id", sessaoIdStr);
+		sessaoIdStr = sessao.getId();
+		Cookie cookie_sessao_id = new Cookie("sessao_id", String.valueOf(sessaoIdStr));
 		cookie_sessao_id.setMaxAge(3600);
 		response.addCookie(cookie_sessao_id);
-		return "novaPagina";
+		return "requisicao";
 	}
 }

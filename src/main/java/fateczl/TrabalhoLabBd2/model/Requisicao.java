@@ -22,7 +22,7 @@ public class Requisicao {
 	@Column(name = "id", nullable = false)
 	private Long id;
 	@Column(name = "codigo_http", length = 200, nullable = false)
-	private String codigo_http;
+	private String codigoHttp;
 	@Column(name = "segundos", nullable = false)
 	private float segundos;
 	

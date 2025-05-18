@@ -4,15 +4,31 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import fateczl.TrabalhoLabBd2.model.Pagina;
 
 @Repository
-public interface PaginaRepository extends JpaRepository<Pagina, Long>{
-	public List<Pagina> findByPagina_url(String pagina_url);
-	public List<Pagina> findByTamanho_arquivo_bytes(Long tamanho_arquivo_bytes);
-	@Query("SELECT p FROM pagina p WHERE p.tamanho_arquivo_bytes <?1")
-	public List<Pagina> findByTamanhoMenorQue(Long tamanho_arquivo_bytes);
-	
+public interface PaginaRepository extends JpaRepository<Pagina, Long> {
+
+    List<Pagina> findByPaginaUrl(String paginaUrl);
+
+    List<Pagina> findByTamanhoArquivoBytes(Long tamanhoArquivoBytes);
+
+    /*@Query("SELECT p FROM Pagina p WHERE p.tamanhoArquivoBytes < ?1")
+    List<Pagina> findByTamanhoMenorQue(Long tamanhoArquivoBytes);*/
+    
+    List<Pagina> findByTamanhoArquivoBytesLessThan(Long tamanho);
+
+    
+    @Query("SELECT p FROM Pagina p " +
+    	       "JOIN Pagina_Link pl ON p.id = pl.paginaLinkId.paginaId " +
+    	       "JOIN Link l ON pl.paginaLinkId.linkId = l.id " +
+    	       "WHERE l.urlDestino = :urlDestino")
+	List<Pagina> findPaginasByLinkUrlDestino(@Param("urlDestino") String urlDestino);
+
 }
+
+
+

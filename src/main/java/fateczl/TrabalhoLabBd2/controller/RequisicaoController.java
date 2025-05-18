@@ -19,6 +19,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -51,10 +52,9 @@ public class RequisicaoController {
 	
 
 	@PostMapping("/requisicaoPagina")
-	@ResponseBody
-	public String requisicaoPagina(@RequestParam String url) throws IOException, NoSuchAlgorithmException, InterruptedException {
+	public String requisicaoPagina(@RequestParam String url, Model model, @CookieValue(name = "sessao_id", required = false) String sessao_cookie) throws IOException, NoSuchAlgorithmException, InterruptedException {
 		
-		System.out.println("SALVE "+url);
+		
 		String baseUrl = url.replaceAll("^(https?://[^/]+).*", "$1");
 		
 		List<Link> link_list = new ArrayList<>();
@@ -70,16 +70,16 @@ public class RequisicaoController {
 	
 			    if (href.startsWith("http")) {
 			    	Link link_obj = new Link();
-			    	link_obj.setLink_target("_blank");
+			    	link_obj.setLinkTarget("_blank");
 			    	link_obj.setTitulo(title);
-			    	link_obj.setUrl_destino(href);
+			    	link_obj.setUrlDestino(href);
 			    	link_list.add(link_obj);
 			        //System.out.printf("Link outra Pagina | Title:%s Link:%s\n",title, href);
 			    } else if (href.startsWith("/")) {
 			    	Link link_obj = new Link();
-			    	link_obj.setLink_target("_self");
+			    	link_obj.setLinkTarget("_self");
 			    	link_obj.setTitulo(title);
-			    	link_obj.setUrl_destino(baseUrl+href);
+			    	link_obj.setUrlDestino(baseUrl+href);
 			    	link_list.add(link_obj);
 			        //System.out.printf("Link Pagina | Title:%s | Link:%s\n",title, href);
 			    } 
@@ -88,11 +88,13 @@ public class RequisicaoController {
 	
 			}
 		}catch(Exception e) {
-			
+            model.addAttribute("erro", "Digite uma Url Válida!");            
+			return "requisicao";
 		}
 
 		
 		
+		System.out.println("DEBUG 01");
 		 // Criar cliente HTTP
         HttpClient client = HttpClient.newHttpClient();
 
@@ -102,63 +104,84 @@ public class RequisicaoController {
                 .GET()
                 .build();
 
+        System.out.println("DEBUG 02");
         // Enviar a requisição e obter a resposta como String
         long inicio = System.nanoTime();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         long fim = System.nanoTime();
+        
 
         // Obter os dados
-        float ms = (fim - inicio) / 1_000_000.0f;
+        float ms = (fim - inicio) / 1_000_000.000f;
         int statusCode = response.statusCode();
         String html = response.body();
         String tipo = response.headers().firstValue("Content-Type").orElse("Desconhecido");
         long tamanho = html.getBytes().length ;
         
         
+        //if(tamanho)
+        
+        
         // Salvar Pagina
         Pagina pagina = new Pagina();
-        pagina.setCodigo_html(html);
-        pagina.setPagina_url(url);
-        pagina.setTamanho_arquivo_bytes(tamanho);
-        pagina.setTipo_conteudo(tipo);
-        paginaRep.save(pagina);
+        pagina.setCodigoHtml(html);
+        pagina.setPaginaUrl(url);
+        pagina.setTamanhoArquivoBytes(tamanho);
+        pagina.setTipoConteudo(tipo);
+        
+        try {
+        	paginaRep.save(pagina);
+        }catch(Exception e) {
+            model.addAttribute("erro", "A Requisição Para o Site passou de 1mb ");            
+            return "requisicao";
+        }
         
         
         
         Sessao sessao = new Sessao();
-        sessao.setId(1L);
-        
-        
-        // Salvar Requisicao
-        
+        sessao.setId(Long.parseLong(sessao_cookie));
         Requisicao requisicao = new Requisicao();
-        requisicao.setCodigo_http(String.valueOf(statusCode));
-        requisicao.setPagina(pagina);
-        requisicao.setSegundos(ms);
-        requisicao.setSessao(sessao);
-        requisicaoRep.save(requisicao);
-        
-        
-        if(hasLink) {
-        	for(Link link : link_list) {
-        		
-         		linkRep.save(link);
-        		
-        		Pagina_Link paginaLink = new Pagina_Link();
-        		
-        		PaginaLinkId paginaLinkId = new PaginaLinkId();
-        		System.out.println("ID01: "+link.getId());
-        		System.out.println("ID02: "+pagina.getId());
-        		paginaLinkId.setLink_id(link.getId());
-        		paginaLinkId.setPagina_id(pagina.getId());
-        		
-        		paginaLink.setPaginaLinkId(paginaLinkId);
-        		
-        		linkPaginaRep.save(paginaLink);
-        	}
-        }
-        
+        try {
+	        // Salvar Requisicao
+	        
+	        requisicao = new Requisicao();
+	        requisicao.setCodigoHttp(String.valueOf(statusCode));
+	        requisicao.setPagina(pagina);
+	        requisicao.setSegundos(ms/1000);
+	        requisicao.setSessao(sessao);
+	        requisicaoRep.save(requisicao);
+	        
+	        
+	        if(hasLink) {
+	        	for(Link link : link_list) {
+	        		
+	         		linkRep.save(link);
+	        		
+	        		Pagina_Link paginaLink = new Pagina_Link();
+	        		
+	        		PaginaLinkId paginaLinkId = new PaginaLinkId();
+	        		System.out.println("ID01: "+link.getId());
+	        		System.out.println("ID02: "+pagina.getId());
+	        		paginaLinkId.setLinkId(link.getId());
+	        		paginaLinkId.setPaginaId(pagina.getId());
+	        		
+	        		paginaLink.setPaginaLinkId(paginaLinkId);
+	        		
+	        		linkPaginaRep.save(paginaLink);
+	        	}
+	        }
+        }catch(Exception e) {
+            
 
+
+            pagina.setTipoConteudo("Passou de 1mb");
+            requisicao.setCodigoHttp("404");
+            requisicao.setPagina(pagina);
+            model.addAttribute("requisicao", requisicao);
+            paginaRep.delete(pagina);
+            
+            return "requisicao";
+        }
 
         // Exibir informações
         System.out.println("BaseUrl: "+baseUrl);
@@ -168,6 +191,10 @@ public class RequisicaoController {
         System.out.println("Código de status: " + statusCode);
         System.out.println("Tamanho da página: " + tamanho+" mb");
         //System.out.println("HTML da página:\n" + html);
-		return "STATUS OK!";
+        requisicao.getPagina().getPaginaUrl();
+        requisicao.getPagina().getTipoConteudo();
+        model.addAttribute("requisicao", requisicao);
+        
+		return "requisicao";
 	}
 }

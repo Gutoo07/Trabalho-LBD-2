@@ -24,5 +24,5 @@ public class Sessao {
 	@Column(name = "usuario", length = 30, nullable = false)
 	private String usuario;
 	@Column(name = "usuario_ip", length = 20, nullable = false)
-	private String usuario_ip;
+	private String usuarioIp;
 }

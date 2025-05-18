@@ -10,6 +10,6 @@ import lombok.Setter;
 @Setter
 @EqualsAndHashCode
 public class PaginaLinkId {
-	private Long pagina_id;
-	private Long link_id;
+	private Long paginaId;
+	private Long linkId;
 }
