@@ -25,7 +25,7 @@ public class Interceptor implements HandlerInterceptor {
 			HttpServletResponse response,
 			Object handler, ModelAndView mv) throws NoSuchAlgorithmException, IOException, InterruptedException {
 		if (mv != null) {
-			//if (request.getMethod().equals("GET")) {
+			if (request.getMethod().equals("GET")) {
 				Cookie[] cookies = request.getCookies();
 				if (cookies != null) {
 					for (Cookie c : cookies) {
@@ -40,7 +40,7 @@ public class Interceptor implements HandlerInterceptor {
 						}
 					}
 				}
-			//}
+			}
 		}
 	}
 

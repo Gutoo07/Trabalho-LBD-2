@@ -126,7 +126,7 @@
           <tbody>
 			<c:forEach var="pagina" items="${paginas}">
 	            <tr>
-	                <td>${pagina.getPaginaUrl()}</td>
+	                <td style="word-break: break-all; max-width: 95%;">${pagina.getPaginaUrl()}</td>
 	                <td>${pagina.getTipoConteudo()}</td>
 					<td><fmt:formatNumber value="${pagina.getTamanhoArquivoBytes() / 1048576.0}" maxFractionDigits="4" />MB</td>
 	                <td><button onclick="window.location.href='/page_detail?pageId=${pagina.getId()}';">Ver</button></td>

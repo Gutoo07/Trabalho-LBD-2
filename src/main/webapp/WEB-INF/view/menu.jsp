@@ -84,7 +84,7 @@
         <nav style="display: flex; justify-content: space-around; flex-wrap: wrap;">
             <a href="/" style="color: white; text-decoration: none; font-weight: bold;">Nova Sessão</a>
             <a href="/requisicao" style="color: white; text-decoration: none; font-weight: bold;">Nova Requisição</a>
-            <a href="/paginas" style="color: white; text-decoration: none; font-weight: bold;">Pagina</a>
+            <a href="/paginas" style="color: white; text-decoration: none; font-weight: bold;">Páginas</a>
             <a href="/sessoes" style="color: white; text-decoration: none; font-weight: bold;">Sessões</a>
             <a href="/requisicoes" style="color: white; text-decoration: none; font-weight: bold;">Requisições</a>
 			<a href="/logs" style="color: white; text-decoration: none; font-weight: bold;">Logs</a>

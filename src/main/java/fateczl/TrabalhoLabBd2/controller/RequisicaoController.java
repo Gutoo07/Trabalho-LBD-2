@@ -67,8 +67,8 @@ public class RequisicaoController {
 		
 		List<Link> link_list = new ArrayList<>();
 		boolean hasLink = false;
-		if (method != null) {
-			if (method.equals("GET")) {
+		//if (method != null) {
+			//if (method.equals("GET")) {
 				try {
 					Document doc = Jsoup.connect(url).get();
 					Elements links = doc.select("a[href]");
@@ -99,8 +99,8 @@ public class RequisicaoController {
 		            model.addAttribute("erro", "Digite uma Url Válida!");            
 					return "requisicao";
 				}
-			}
-		}
+			//}
+		//}
 		
 		 // Criar cliente HTTP
         HttpClient client = HttpClient.newHttpClient();
