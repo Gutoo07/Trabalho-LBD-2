@@ -35,7 +35,6 @@ public class Interceptor implements HandlerInterceptor {
 							if (method.equals("GET")) {
 								requisicaoController.requisicaoPagina(url, method, mv.getModelMap(), c.getValue());
 							} else if (method.equals("POST")) {
-								System.out.println("===================="+url);
 								requisicaoController.requisicaoPagina(url, method, mv.getModelMap(), c.getValue());
 							}
 						}

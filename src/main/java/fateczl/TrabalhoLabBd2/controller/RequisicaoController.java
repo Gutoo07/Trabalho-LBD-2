@@ -58,9 +58,7 @@ public class RequisicaoController {
 	@Autowired
 	private LogsRepository logsRep;
 	@Autowired
-	private SessaoRepository sessaoRep;
-
-	
+	private SessaoRepository sessaoRep;	
 
 	@PostMapping("/requisicaoPagina")
 	public String requisicaoPagina(@RequestParam String url, @RequestParam(required = false) String method, ModelMap model, @CookieValue(name = "sessao_id", required = false) String sessao_cookie) throws IOException, NoSuchAlgorithmException, InterruptedException {
@@ -104,7 +102,6 @@ public class RequisicaoController {
 			}
 		}
 		
-		
 		 // Criar cliente HTTP
         HttpClient client = HttpClient.newHttpClient();
 
@@ -118,7 +115,6 @@ public class RequisicaoController {
         long inicio = System.nanoTime();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
         long fim = System.nanoTime();
-        
 
         // Obter os dados
         float ms = (fim - inicio) / 1_000_000.000f;
@@ -126,7 +122,6 @@ public class RequisicaoController {
         String html = response.body();
         String tipo = response.headers().firstValue("Content-Type").orElse("Desconhecido");
         long tamanho = html.getBytes().length ;
-        
         
         //if(tamanho)
         
@@ -144,8 +139,6 @@ public class RequisicaoController {
             model.addAttribute("erro", "A Requisição Para o Site passou de 1mb ");            
             return "requisicao";
         }
-        
-        
         
         Optional<Sessao> sessao = sessaoRep.findById(Long.parseLong(sessao_cookie));
         //sessao.setId(sessao.getId());
@@ -178,8 +171,6 @@ public class RequisicaoController {
 	        	}
 	        }
         }catch(Exception e) {
-            
-
 
             pagina.setTipoConteudo("Passou de 1mb");
             requisicao.setCodigoHttp("404");
@@ -188,15 +179,12 @@ public class RequisicaoController {
             paginaRep.delete(pagina);
             
             return "requisicao";
-        }
-        
+        }        
         
         Logs log = new Logs();
         
         log.setSessao(sessao.get());
         log.setMensagem("["+sessao.get().getUsuario()+"]"+" : "+sessao.get().getUsuarioIp()+" >> Acessou : "+pagina.getPaginaUrl());
-        
-
         
         logsRep.save(log);
         requisicao.getPagina().getPaginaUrl();

@@ -1,4 +1,4 @@
-package fateczl.TrabalhoLabBd2.controller;
+ package fateczl.TrabalhoLabBd2.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;

@@ -21,7 +21,7 @@ public class Requisicao {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
 	private Long id;
-	@Column(name = "codigo_http", length = 200, nullable = false)
+	@Column(name = "codigo_http", length = 5, nullable = false)
 	private String codigoHttp;
 	@Column(name = "segundos", nullable = false)
 	private float segundos;

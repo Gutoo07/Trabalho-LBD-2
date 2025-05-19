@@ -30,7 +30,4 @@ public class Pagina {
 
     @Column(name = "tamanho_arquivo_bytes", nullable = false)
     private Long tamanhoArquivoBytes;
-
-    /*@Column(name = "sha1", length = 40, nullable = false)
-    private String sha1;*/
 }
