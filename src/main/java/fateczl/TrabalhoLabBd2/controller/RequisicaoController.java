@@ -86,14 +86,12 @@ public class RequisicaoController {
 					    	link_obj.setTitulo(title);
 					    	link_obj.setUrlDestino(href);
 					    	link_list.add(link_obj);
-					        //System.out.printf("Link outra Pagina | Title:%s Link:%s\n",title, href);
 					    } else if (href.startsWith("/")) {
 					    	Link link_obj = new Link();
 					    	link_obj.setLinkTarget("_self");
 					    	link_obj.setTitulo(title);
 					    	link_obj.setUrlDestino(baseUrl+href);
 					    	link_list.add(link_obj);
-					        //System.out.printf("Link Pagina | Title:%s | Link:%s\n",title, href);
 					    } 
 					    
 					    hasLink = true;
@@ -107,7 +105,6 @@ public class RequisicaoController {
 		}
 		
 		
-		System.out.println("DEBUG 01");
 		 // Criar cliente HTTP
         HttpClient client = HttpClient.newHttpClient();
 
@@ -117,7 +114,6 @@ public class RequisicaoController {
                 .GET()
                 .build();
 
-        System.out.println("DEBUG 02");
         // Enviar a requisição e obter a resposta como String
         long inicio = System.nanoTime();
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
@@ -173,8 +169,6 @@ public class RequisicaoController {
 	        		Pagina_Link paginaLink = new Pagina_Link();
 	        		
 	        		PaginaLinkId paginaLinkId = new PaginaLinkId();
-	        		System.out.println("ID01: "+link.getId());
-	        		System.out.println("ID02: "+pagina.getId());
 	        		paginaLinkId.setLinkId(link.getId());
 	        		paginaLinkId.setPaginaId(pagina.getId());
 	        		
@@ -205,16 +199,6 @@ public class RequisicaoController {
 
         
         logsRep.save(log);
-        
-        // Exibir informações
-        System.out.println();
-        System.out.println("BaseUrl: "+baseUrl);
-        System.out.println("Url: " + url);
-        System.out.println("Tipo: "+ tipo);
-        System.out.println("Resposta Ms: "+ ms + "ms");
-        System.out.println("Código de status: " + statusCode);
-        System.out.println("Tamanho da página: " + tamanho+" mb");
-        //System.out.println("HTML da página:\n" + html);
         requisicao.getPagina().getPaginaUrl();
         requisicao.getPagina().getTipoConteudo();
         model.addAttribute("requisicao", requisicao);

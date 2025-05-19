@@ -27,14 +27,7 @@ public class PaginaController {
 			@RequestParam("pagina_url") String paginaUrl,
 			@CookieValue(name="sessao_id", defaultValue="") String sessaoIdStr) throws IOException, NoSuchAlgorithmException {
 		
-		System.out.println("Fazendo upload de pagina para sessao #"+sessaoIdStr);
-		
 		Long tamanhoPagina = arquivo.getSize();
-		
-		System.out.println("Tamanho da Pagina: "+tamanhoPagina+ " bytes.");
-		if (tamanhoPagina > 1000000) {
-			System.out.println("A pagina eh maior que 1MB: vai dar erro! ;)");
-		}
 		
 		byte[] conteudoEmBytes = arquivo.getBytes();
 		MessageDigest md = MessageDigest.getInstance("SHA1");

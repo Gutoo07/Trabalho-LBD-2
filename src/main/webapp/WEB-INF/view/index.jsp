@@ -19,6 +19,11 @@
         <label>IP:</label> <input type="text" name="usuario_ip"><br>
         <button type="submit">Entrar</button>
     </form>
+    <div class="conteiner" align="center">
+		<c:if test="${not empty erro }">
+			<h2 style="color: red;"><c:out value="${erro }" /></h2>
+		</c:if>
+	</div>
 
 </body>
 </html>

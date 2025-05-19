@@ -1,5 +1,6 @@
 package fateczl.TrabalhoLabBd2.persistence;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
